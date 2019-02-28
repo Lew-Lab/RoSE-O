@@ -24,7 +24,7 @@ classdef Nanoscope
         
         % phase mask parameters
         %--------------------------------------------------------
-        phaseMaskPara=struct('maskName','standard',...%parameters of the phase mask mounted on SLM
+        phaseMaskPara=struct('maskName','tri-spot',...%parameters of the phase mask mounted on SLM
             'pupilRadius',40,...
             'x_shift_center_position',0,...
             'y_shift_center_position',0,...
@@ -2582,5 +2582,5 @@ classdef Nanoscope
         end
             
     end
-    
+end
     
