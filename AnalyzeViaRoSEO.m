@@ -2,7 +2,7 @@
 % place following files in a directory called source_dir
 % 1- transmissionRatio_name: a mat file that contains transmit_ratio_L2R as
 % a variable
-% transmit_ratio_L2R is a scalar indicating the light trasnmission ratio
+% transmit_ratio_L2R is a scalar indicating the light transmission ratio
 % between left and right channels
 %
 % 2- zerothOrder_name: a mat file containing zerothOrder as a variable
