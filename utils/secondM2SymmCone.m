@@ -1,8 +1,8 @@
-function [mux,muy,muz,rotMobil,x0]= secondM2SymmCone( secM )
+function [mux,muy,muz,rotMobil,x0]= secondM2SymmCone(secM,varargin)
 %SECONDM2CONE maps the second moments onto parameters of a
 %symmetric cone model for a rotating molecule
 
-
+s=opt2struct(varargin);
 %% define a least square problem structure
 
 % get the initial estimates
