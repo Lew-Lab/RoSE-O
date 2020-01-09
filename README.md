@@ -1,6 +1,4 @@
 # RoSE-O
 
-## File format
-A single matfile called RoSEOData.m consisting of following fields:
-
-+ transmissionRatioLR: a scalar that describes the light transmission ratio between left and right channels
+## Overview
+RoSE-O (**R**obust **S**tatistical **E**stimation algorithm for single-molecule **O**rientation measurement)
