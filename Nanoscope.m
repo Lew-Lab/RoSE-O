@@ -11,11 +11,12 @@ classdef Nanoscope
         %--------------------------------------------------------
         pixelSize=58.5;% object pixel size (nm)
         numApt=1.4;% numerical aperture
-        emissWavelength=524;% central emission wavelength (nm)
+        emissWavelength=610;% central emission wavelength (nm)
         ADcount=.49;% photoelectron conversion
         offset=0;% baseline of camera (in digital units)
-        refractiveIndx=1.51;% refractive index of the medium
-        imageSize=151; % side length of the region of interest
+        refractiveIndx=1.518;% refractive index of the medium
+        refractiveIndxSam=1.334; % refractive index of the sample
+        imageSize=95; % side length of the region of interest
         
         %===========================
         % phase mask parameters
@@ -25,7 +26,7 @@ classdef Nanoscope
         % phase mask parameters
         %--------------------------------------------------------
         phaseMaskPara=struct('maskName','tri-spot',...%parameters of the phase mask mounted on SLM
-            'pupilRadius',40,...
+            'pupilRadius',80,...
             'x_shift_center_position',0,...
             'y_shift_center_position',0,...
             'maskRotation',0);
@@ -194,11 +195,21 @@ classdef Nanoscope
             end
             
             if isfield(s,'refractiveindx')
-                if (isnumeric(s.adcount)&&s.adcount>0)
+                if (isnumeric(s.refractiveindx)&&s.refractiveindx>0)
                     obj.refractiveIndx=s.refractiveindx;
                 else
                     msg=sprintf(['Expecting a positive numeric type for refractiveIndx.\n',...
                         'Setting refractiveIndx property to default %.2f'],obj.refractiveIndx);
+                    warning('Nanoscope:InconsistentInputType',msg)
+                end
+            end
+            
+            if isfield(s,'refractiveindxsam')
+                if (isnumeric(s.refractiveindxsam)&&s.refractiveindxsam>0)
+                    obj.refractiveIndxSam=s.refractiveindxsam;
+                else
+                    msg=sprintf(['Expecting a positive numeric type for refractiveIndxSam.\n',...
+                        'Setting refractiveIndxSam property to default %.2f'],obj.refractiveIndxSam);
                     warning('Nanoscope:InconsistentInputType',msg)
                 end
             end
@@ -218,8 +229,9 @@ classdef Nanoscope
             ImagingInfo=sprintf(['pixel size: %.2f\n','numerical aperture: %.2f\n',...
                 'emission wavelength: %.2f\n','offset: %.2f\n',...
                 'AD count: %.2f\n','medium refractive index:  %.2f\n',...
-                'image size: %.2f\n'],  obj.pixelSize,  obj.numApt,obj.emissWavelength,...
-                obj.offset, obj.ADcount, obj.refractiveIndx,obj.imageSize);
+                'sample refractive index:  %.2f\n','image size: %.2f\n'],...
+                obj.pixelSize,  obj.numApt,obj.emissWavelength,...
+                obj.offset, obj.ADcount, obj.refractiveIndx, obj.refractiveIndxSam,obj.imageSize);
             
             fprintf('%s\n',repmat('=',1,20));
             fprintf('Imaging parameters\n');
@@ -403,6 +415,21 @@ classdef Nanoscope
             
         end
         
+        function obj=set.refractiveIndxSam(obj,val)
+            if nargin>0
+                if ~isnumeric(val)
+                    error('Nanoscope:InconsistentInputType','Expecting a numeric type for refractive index of sample')
+                end
+                if ~ (val>0)
+                    error('Nanoscope:InconsistentInputValue','Expecting a positive value for refractive index of sample')
+                    
+                end
+                obj.refractiveIndxSam=val;
+            end
+            
+            
+        end
+        
         
         function obj=set.ADcount(obj,val)
             if nargin>0
@@ -538,7 +565,9 @@ classdef Nanoscope
             Emitter.position_para.y=0;
             Emitter.position_para.z=0;
             
-            [~,brightnessScaling]=obj.simDipole_novotny(obj,Emitter);
+            %             [~,brightnessScaling]=obj.simDipole_novotny(obj,Emitter);
+            [brightnessScalingX,brightnessScalingY]=obj.simDipole_novotny(obj,Emitter); % 190717 TD
+            brightnessScaling = brightnessScalingX+brightnessScalingY;
         end
         
         %%
@@ -716,7 +745,8 @@ classdef Nanoscope
             mask_aper = pmaskSize(1)-min((mask_nonZeroStartV-1)+(mask_nonZeroEndV-1),...
                 (mask_nonZeroStartH-1)+(mask_nonZeroEndH-1));
             
-            scaleFactor = rho_max*2 / mask_aper;
+            scaleFactor = (rho_max+1)*2 / mask_aper; % 190814 TD for solving mismatch of BFP size with vectorial forward model
+%             scaleFactor = rho_max*2 / mask_aper;
             newMaskSize = ceil(pmaskSize(1)*scaleFactor);
             
             if mod(newMaskSize,2) ~= 0
@@ -1004,7 +1034,7 @@ classdef Nanoscope
             n1=Nanoscope.refractiveIndx;
             zh=0;% thickness of film
             z2=0;% distance from the emitter to the interface
-            n2=1.33;% sample refractive index
+            n2=Nanoscope.refractiveIndxSam;% sample refractive index
             nh=n1;% thin film refractive index
             lambda = Nanoscope.emissWavelength; %wavelength (nm)
             NA =Nanoscope.numApt; %numerical aperture
@@ -1626,7 +1656,9 @@ classdef Nanoscope
             Emitter_t.position_para.y=0;
             Emitter_t.position_para.z=0;
             
-            [~,brightness_scaling]=obj.simDipole_novotny(obj,Emitter_t);
+            %             [~,brightness_scaling]=obj.simDipole_novotny(obj,Emitter_t);
+            [brightness_scalingX,brightness_scalingY]=obj.simDipole_novotny(obj,Emitter_t); % 190717
+            brightness_scaling = brightness_scalingX + brightness_scalingY;
             
             %handle for croping region of interest
             roi=@(img)img(-up_sample*(img_size-1)/2+N_pupil/2+2:1:up_sample*(img_size-1)/2+N_pupil/2+2,....
