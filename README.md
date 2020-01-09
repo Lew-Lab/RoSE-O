@@ -8,7 +8,7 @@ Copy the package in a folder on MATLAB path. Run `startup.m`. For a basic usage,
 
 
 ## License
-Please see  `license.md`.
+Please see  `license.txt`.
 
 ## Citation
 If you find this package useful, please cite accordingly:
