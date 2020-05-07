@@ -1,5 +1,5 @@
 function[ gammaf,recovStruct,loc_data]=RoSEO(obj,SMLM_img,b,FPSFx,FPSFy,varargin)
-%TriSpotDetection returns a list of molecular parameter estimates
+%RoSEO returns a list of molecular parameter estimates
 %->---
 %input
 %->---
