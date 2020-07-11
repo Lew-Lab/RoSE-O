@@ -7,9 +7,9 @@ function [subFolderName] = subdir(folderName)
 allFolderCont = dir(folderName);
 isdirInd = [allFolderCont(1:end).isdir];
 
-allFolderCont(isdirInd==0) = [];
+allFolderCont(isdirInd == 0) = [];
 
-inds = zeros(length(allFolderCont),1);
+inds = zeros(length(allFolderCont), 1);
 n = 0;
 k = 1;
 
@@ -22,7 +22,7 @@ while n < 2 && k <= length(allFolderCont)
 end
 
 allFolderCont(logical(inds)) = [];
-subFolderName = cell(length(allFolderCont),1);
+subFolderName = cell(length(allFolderCont), 1);
 for i = 1:length(allFolderCont)
     subFolderName{i} = allFolderCont(i).name;
 end

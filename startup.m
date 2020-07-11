@@ -1,4 +1,4 @@
- set(groot,'DefaultFigureColormap',parula)
- 
- addpath('utils')
- addpath('phasemask')
+set(groot, 'DefaultFigureColormap', parula)
+
+addpath('utils')
+addpath('phasemask')

@@ -3,5 +3,5 @@
 % 0-pi/2)
 
 function alpha = rotCon2alpha(rotCon)
-alpha = acos( (  -1 + sqrt(1+8*rotCon)  )/2);
+alpha = acos((-1 + sqrt(1 + 8 * rotCon))/2);
 end

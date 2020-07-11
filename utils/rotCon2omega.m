@@ -3,6 +3,6 @@
 % (Omega, 0-4pi)
 
 function omega = rotCon2omega(rotCon)
-alpha = acos( (  -1 + sqrt(1+8*rotCon)  )/2);
+alpha = acos((-1 + sqrt(1 + 8 * rotCon))/2);
 omega = alpha2omega(alpha);
 end

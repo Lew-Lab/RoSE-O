@@ -18,12 +18,11 @@ elseif ~isvector(opt_args)
 
     error('1D cell array expected.');
 
-elseif mod(length(opt_args),2) ~= 0
+elseif mod(length(opt_args), 2) ~= 0
 
     error('Even number of elements expected.');
 
 end
-
 
 
 for i = 1:2:length(opt_args)
